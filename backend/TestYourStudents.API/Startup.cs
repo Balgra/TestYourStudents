@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using TestYourStudents.EF;
 
-namespace TestYourStudents
+namespace TestYourStudents.API
 {
     public class Startup
     {
@@ -28,9 +23,12 @@ namespace TestYourStudents
         {
 
             services.AddControllers();
+            services.AddDbContext<TestYourStudentsDbContext>(
+                options => options.UseMySql("server=pma.adelin.ninja;database=tys;port=3306;uid=root;password=parola01;",x=>x.MigrationsAssembly("TestYourStudents.API")));                
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TestYourStudents", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TestYourStudents.API", Version = "v1" });
+                
             });
         }
 
@@ -41,7 +39,7 @@ namespace TestYourStudents
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TestYourStudents v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TestYourStudents.API v1"));
             }
 
             app.UseHttpsRedirection();
