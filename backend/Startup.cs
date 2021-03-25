@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using TestYourStudents.EF;
+using MySqlConnector;
 
 namespace TestYourStudents
 {
@@ -28,9 +25,12 @@ namespace TestYourStudents
         {
 
             services.AddControllers();
+            services.AddDbContext<TYSDbContext>(
+                options => options.UseMySql("server=pma.adelin.ninja;database=tys;port=3306;uid=root;password=parola01;",x=>x.MigrationsAssembly("TestYourStudents")));                
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TestYourStudents", Version = "v1" });
+                
             });
         }
 
