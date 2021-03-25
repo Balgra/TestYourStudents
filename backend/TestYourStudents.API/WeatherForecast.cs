@@ -1,6 +1,6 @@
 using System;
 
-namespace TestYourStudents
+namespace TestYourStudents.API
 {
     public class WeatherForecast
     {

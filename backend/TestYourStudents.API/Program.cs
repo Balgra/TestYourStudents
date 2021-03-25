@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace TestYourStudents
+namespace TestYourStudents.API
 {
     public class Program
     {
