@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TestYourStudents.Core.Entities;
 
 namespace TestYourStudents.EF
 {
@@ -9,5 +10,7 @@ namespace TestYourStudents.EF
         {
             
         }
+
+        public DbSet<Professor> Professor { get; set; }
     }
 }

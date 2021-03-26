@@ -41,7 +41,7 @@ namespace TestYourStudents.API.Controllers
                 Phone = professor.Phone
             };
 
-            await _context.Professor.AddAsync(newProfessor);
+            professors.Add(newProfessor);
             await _context.SaveChangesAsync();
 
             return Ok(newProfessor);
