@@ -58,7 +58,8 @@ namespace TestYourStudents.API
                         RequireExpirationTime = false,
                         ValidateLifetime = true
                     };
-                });
+                })
+                .AddCookie();
             
             services.AddSwaggerGen(c =>
             {
@@ -128,9 +129,10 @@ namespace TestYourStudents.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            
+            app.UseAuthentication();
 
             app.UseAuthorization();
-            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {

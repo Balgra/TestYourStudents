@@ -38,6 +38,8 @@ namespace TestYourStudents.Core.Identity.Repository
             {
                 Email = request.Email,
                 UserName = request.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName
             };
 
             var createdUser = await _userManager.CreateAsync(newUser, request.Password);
@@ -94,9 +96,11 @@ namespace TestYourStudents.Core.Identity.Repository
                     new Claim(JwtRegisteredClaimNames.Sub, newUser.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Email, newUser.Email),
+                    new Claim("firstName", newUser.FirstName),
+                    new Claim("lastName", newUser.LastName),
                     new Claim("id", newUser.Id),
                 }),
-                Expires = DateTime.UtcNow.AddDays(30),
+                Expires = DateTime.UtcNow.AddDays(100),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
             };
@@ -106,7 +110,7 @@ namespace TestYourStudents.Core.Identity.Repository
             return new AuthenticationResult
             {
                 Success = true,
-                Token = tokenHandler.WriteToken(token),
+                Token = tokenHandler.WriteToken(token)
             };
         }
     }

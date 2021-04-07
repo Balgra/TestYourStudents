@@ -20,14 +20,13 @@ namespace TestYourStudents.API.Controllers
 
         public IdentityController(IIdentityRepository identityRepository, UserManager<User> userManager)
         {
-            _identityRepository = _identityRepository;
+            _identityRepository = identityRepository;
             _userManager = userManager;
         }
         
         
         [HttpPost("Register")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(BadRequestResult), 400)]
         public async Task<IActionResult> Register([FromBody] UserRegistrationRequest request)
         {
             if (!ModelState.IsValid)
@@ -54,6 +53,27 @@ namespace TestYourStudents.API.Controllers
             });
         }
         
+        
+        [HttpPost("Login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
+        {
+            var authResponse = await _identityRepository.LoginAsync(request.Email, request.Password);
+            if (!authResponse.Success)
+            {
+                return BadRequest(new AuthFailedResponse
+                {
+                    Errors = authResponse.Errors
+                });
+            }
+
+            return Ok(new AuthSuccessResponse
+            {
+                Token = authResponse.Token,
+                
+            });
+        }
+
         
 
     }
