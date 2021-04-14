@@ -37,7 +37,7 @@ namespace TestYourStudents.API.Controllers
                 });
             }
 
-            var authResponse = await _identityRepository.RegisterAsync(request);
+            var authResponse = await _identityRepository.RegisterAsync(request, "Professor");
 
             if (!authResponse.Success)
             {

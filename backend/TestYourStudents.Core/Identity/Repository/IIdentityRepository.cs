@@ -6,9 +6,8 @@ namespace TestYourStudents.Core.Identity.Repository
 {
     public interface IIdentityRepository
     {
-        Task<AuthenticationResult> RegisterAsync(UserRegistrationRequest request);
+        Task<AuthenticationResult> RegisterAsync(UserRegistrationRequest request, string requesterRole);
         Task<AuthenticationResult> LoginAsync(string email, string password);
-        Task<AuthenticationResult> UpdateAsync(User user, UserUpdateRequest request);
 
     }
 }
