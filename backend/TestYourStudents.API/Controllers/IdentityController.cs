@@ -1,33 +1,36 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TestYourStudents.API.Requests;
+using TestYourStudents.API.Responses;
 using TestYourStudents.Core.Entities;
 using TestYourStudents.Core.Identity.Repository;
 using TestYourStudents.Core.Identity.Utils;
 using TestYourStudents.Core.Identity.Utils.Responses;
+using TestYourStudents.EF.EFRepositories.Abstractions;
 
 namespace TestYourStudents.API.Controllers
 {
     [Microsoft.AspNetCore.Components.Route("api/Identity")]
     [ApiController]
-
-    public class IdentityController: ControllerBase
+    public class IdentityController : ControllerBase
     {
         private readonly IIdentityRepository _identityRepository;
-        private readonly UserManager<User> _userManager;
+        private readonly IRepository<Course> _repo;
 
-        public IdentityController(IIdentityRepository identityRepository, UserManager<User> userManager)
+        public IdentityController(IIdentityRepository identityRepository, IRepository<Course> repo)
         {
             _identityRepository = identityRepository;
-            _userManager = userManager;
+            _repo = repo;
         }
-        
-        
-        [HttpPost("Register")]
+
+
+        [HttpPost("RegisterAsProfessor")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] UserRegistrationRequest request)
+        public async Task<IActionResult> RegisterAsProfessor([FromBody] ProfessorRegistrationRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -47,13 +50,23 @@ namespace TestYourStudents.API.Controllers
                 });
             }
 
-            return Ok(new AuthSuccessResponse
+            var course = new Course()
             {
-                Token = authResponse.Token,
+                Name = request.CourseName,
+                User = authResponse.User,
+                Created = DateTime.Now,
+                CreatedByUser = authResponse.User
+            };
+            await _repo.AddAsync(course);
+            await _repo.SaveChangesAsync();
+
+            return Ok(new AuthSuccessResponse()
+            {
+                Token = authResponse.Token
             });
         }
-        
-        
+
+
         [HttpPost("Login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
@@ -70,11 +83,31 @@ namespace TestYourStudents.API.Controllers
             return Ok(new AuthSuccessResponse
             {
                 Token = authResponse.Token,
-                
             });
         }
 
-        
+        private async Task<RegisterAsProfessor> Register(UserRegistrationRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return null;
+            }
 
+            var authResponse = await _identityRepository.RegisterAsync(request, "Professor");
+
+            if (!authResponse.Success)
+            {
+                return null;
+            }
+
+            return new RegisterAsProfessor()
+            {
+                AuthSuccessResponse = new AuthSuccessResponse
+                {
+                    Token = authResponse.Token,
+                },
+                Professor = authResponse.User
+            };
+        }
     }
 }

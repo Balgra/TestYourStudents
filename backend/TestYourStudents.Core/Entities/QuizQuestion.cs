@@ -4,13 +4,13 @@ namespace TestYourStudents.Core.Entities
 {
     public class QuizQuestion: BaseEntity
     {
+        [ForeignKey("Quiz")]
         public int QuizId { get; set; }
+        
+        [ForeignKey("Question")]
         public int QuestionId { get; set; }
 
-        [ForeignKey("QuizId")]
         public Quiz Quiz { get; set; }
-        
-        [ForeignKey("QuestionId")]
         public Question Question { get; set; }
     }
 }

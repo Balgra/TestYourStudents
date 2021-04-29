@@ -16,9 +16,11 @@ namespace TestYourStudents.Core.Entities
         public DateTime Updated { get; set; }
         
         [Required]
-        public int CreatedByUserId { get; set; }
+        [ForeignKey("CreatedByUser")]
+        public string CreatedByUserId { get; set; }
         
-        public int UpdatedByUserId { get; set; }
+        [ForeignKey("UpdatedByUser")]
+        public string UpdatedByUserId { get; set; }
         
         public User CreatedByUser { get; set; }
         public User UpdatedByUser { get; set; }

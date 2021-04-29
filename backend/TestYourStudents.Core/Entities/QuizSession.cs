@@ -7,9 +7,13 @@ namespace TestYourStudents.Core.Entities
     {
         public DateTime StartTime { get; set; }
         
+        [ForeignKey("Quiz")]
         public int QuizId { get; set; }
-        
-        [ForeignKey("QuizId")]
         public Quiz Quiz { get; set; }
+        
+        [ForeignKey("User")]
+        public string StudentId { get; set; }
+       
+        public User User { get; set; }
     }
 }

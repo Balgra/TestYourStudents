@@ -100,7 +100,7 @@ namespace TestYourStudents.Core.Identity.Repository
                     new Claim(JwtRegisteredClaimNames.Iss, _configuration.GetSection("JWT:Issuer").Value),
                     new Claim("firstName", newUser.FirstName),
                     new Claim("lastName", newUser.LastName),
-                    new Claim(ClaimTypes.NameIdentifier, newUser.Id),
+                    new Claim("userId", newUser.Id),
                     new Claim(ClaimTypes.Role, role),
                 }),
                 Issuer = _configuration.GetSection("JWT:Issuer").Value,
@@ -114,7 +114,8 @@ namespace TestYourStudents.Core.Identity.Repository
             return new AuthenticationResult
             {
                 Success = true,
-                Token = tokenHandler.WriteToken(token)
+                Token = tokenHandler.WriteToken(token),
+                User = newUser
             };
         }
     }
