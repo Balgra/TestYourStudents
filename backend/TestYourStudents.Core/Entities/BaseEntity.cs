@@ -24,4 +24,5 @@ namespace TestYourStudents.Core.Entities
         public User UpdatedByUser { get; set; }
         
     }
+    
 }

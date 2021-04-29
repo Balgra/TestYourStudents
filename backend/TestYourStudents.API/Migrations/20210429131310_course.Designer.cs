@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestYourStudents.EF;
 
 namespace TestYourStudents.API.Migrations
 {
     [DbContext(typeof(TestYourStudentsDbContext))]
-    partial class TestYourStudentsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210429131310_course")]
+    partial class course
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,7 +164,7 @@ namespace TestYourStudents.API.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("ProfessorId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime(6)");
@@ -173,8 +175,6 @@ namespace TestYourStudents.API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("ProfessorId");
 
                     b.HasIndex("UpdatedByUserId");
 
@@ -407,9 +407,6 @@ namespace TestYourStudents.API.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("StudentId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime(6)");
 
@@ -421,8 +418,6 @@ namespace TestYourStudents.API.Migrations
                     b.HasIndex("CreatedByUserId");
 
                     b.HasIndex("QuizId");
-
-                    b.HasIndex("StudentId");
 
                     b.HasIndex("UpdatedByUserId");
 
@@ -442,9 +437,6 @@ namespace TestYourStudents.API.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
-                    b.Property<string>("StudentId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime(6)");
 
@@ -454,8 +446,6 @@ namespace TestYourStudents.API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("StudentId");
 
                     b.HasIndex("UpdatedByUserId");
 
@@ -631,10 +621,6 @@ namespace TestYourStudents.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TestYourStudents.Core.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("ProfessorId");
-
                     b.HasOne("TestYourStudents.Core.Entities.User", "UpdatedByUser")
                         .WithMany()
                         .HasForeignKey("UpdatedByUserId");
@@ -763,10 +749,6 @@ namespace TestYourStudents.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TestYourStudents.Core.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("StudentId");
-
                     b.HasOne("TestYourStudents.Core.Entities.User", "UpdatedByUser")
                         .WithMany()
                         .HasForeignKey("UpdatedByUserId");
@@ -779,10 +761,6 @@ namespace TestYourStudents.API.Migrations
                         .HasForeignKey("CreatedByUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("TestYourStudents.Core.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("StudentId");
 
                     b.HasOne("TestYourStudents.Core.Entities.User", "UpdatedByUser")
                         .WithMany()
