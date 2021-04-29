@@ -12,7 +12,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using TestYourStudents.Core.Entities;
 using TestYourStudents.Core.Identity.Repository;
-using TestYourStudents.Core.Identity.Utils;
 using TestYourStudents.EF;
 
 namespace TestYourStudents.API
@@ -36,10 +35,6 @@ namespace TestYourStudents.API
             services.AddScoped<IIdentityRepository, IdentityRepository>();
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<TestYourStudentsDbContext>();
-            var jwtOptions = new JwtOptions();
-            Configuration.Bind(nameof(jwtOptions), jwtOptions);
-            services.AddSingleton(jwtOptions);
-
             services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -52,8 +47,9 @@ namespace TestYourStudents.API
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.Secret)),
-                        ValidateIssuer = false,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("JWT:Secret").Value)),
+                        ValidateIssuer = true,
+                        ValidIssuer = Configuration.GetSection("JWT:Issuer").Value,
                         ValidateAudience = false,
                         RequireExpirationTime = false,
                         ValidateLifetime = true
@@ -98,11 +94,11 @@ namespace TestYourStudents.API
             {
                 // Password settings.
                 options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = false;
+                options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
+                options.Password.RequireUppercase = true;
                 options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 1;
+                options.Password.RequiredUniqueChars = 5;
 
                 // // Lockout settings.
                 // options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
