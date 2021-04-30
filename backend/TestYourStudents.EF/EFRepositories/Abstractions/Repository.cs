@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using TestYourStudents.Core.Entities;
 
 namespace TestYourStudents.EF.EFRepositories.Abstractions
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         private TestYourStudentsDbContext _context = null;
         private DbSet<T> table = null;
