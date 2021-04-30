@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using TestYourStudents.Core.Entities;
 using TestYourStudents.Core.Identity.Repository;
 using TestYourStudents.EF;
+using TestYourStudents.EF.EFRepositories.Abstractions;
 
 namespace TestYourStudents.API
 {
@@ -31,7 +32,7 @@ namespace TestYourStudents.API
 
             services.AddControllers();
             services.AddDbContext<TestYourStudentsDbContext>(
-                options => options.UseMySql("server=pma.adelin.ninja;database=tys;port=3306;uid=root;password=parola01;",x=>x.MigrationsAssembly("TestYourStudents.API"))); 
+                options => options.UseMySql(Configuration.GetConnectionString("tys"),x=>x.MigrationsAssembly("TestYourStudents.API"))); 
             services.AddScoped<IIdentityRepository, IdentityRepository>();
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<TestYourStudentsDbContext>();
@@ -110,6 +111,7 @@ namespace TestYourStudents.API
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = true;
             });
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

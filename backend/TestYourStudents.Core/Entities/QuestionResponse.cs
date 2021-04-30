@@ -4,9 +4,9 @@ namespace TestYourStudents.Core.Entities
 {
     public class QuestionResponse : BaseEntity
     {
-        [ForeignKey ("QuestionId")]
         public Question Question { get; set; }
         
+        [ForeignKey ("Question")]
         public int QuestionId { get; set; }
 
         public string Response { get; set; }

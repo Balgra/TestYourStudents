@@ -6,9 +6,9 @@ namespace TestYourStudents.Core.Entities
     {
         public float Grade { get; set; }
         
-        [ForeignKey("QuizSubmissionId")]
         public QuizSubmission QuizSubmission { get; set; }
-       
+        
+        [ForeignKey("QuizSubmission")]
         public int QuizSubmissionId { get; set; }
     }
 }
