@@ -19,12 +19,15 @@ namespace TestYourStudents.API.Controllers
     public class IdentityController : ControllerBase
     {
         private readonly IIdentityRepository _identityRepository;
-        private readonly IRepository<Course> _repo;
+        private readonly IRepository<Course> _courseRepo;
+        private readonly IRepository<StudentEmail> _studentEmailRepo;
 
-        public IdentityController(IIdentityRepository identityRepository, IRepository<Course> repo)
+        public IdentityController(IIdentityRepository identityRepository, IRepository<Course> courseRepo,
+            IRepository<StudentEmail> studentEmailRepo)
         {
             _identityRepository = identityRepository;
-            _repo = repo;
+            _courseRepo = courseRepo;
+            _studentEmailRepo = studentEmailRepo;
         }
 
 
@@ -57,9 +60,49 @@ namespace TestYourStudents.API.Controllers
                 Created = DateTime.Now,
                 CreatedByUser = authResponse.User
             };
-            await _repo.AddAsync(course);
-            await _repo.SaveChangesAsync();
+            await _courseRepo.AddAsync(course);
+            await _courseRepo.SaveChangesAsync();
 
+            return Ok(new AuthSuccessResponse()
+            {
+                Token = authResponse.Token
+            });
+        }
+        
+        
+        [HttpPost("RegisterAsStudent")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RegisterAsStudent([FromBody] UserRegistrationRequest request)
+        {
+            var studentEmails = await _studentEmailRepo.GetAllAsync();
+
+            var student = from studentEmail in studentEmails
+                where request.Email.Equals(studentEmail.Email)
+                select studentEmail;
+
+            if (student.Count() < 0)
+            {
+                return BadRequest($"Couldn't find a student enrolled with the email {request.Email}");
+            }
+            
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new AuthFailedResponse
+                {
+                    Errors = ModelState.Values.SelectMany(x => x.Errors.Select(a => a.ErrorMessage))
+                });
+            }
+
+            var authResponse = await _identityRepository.RegisterAsync(request, "Student");
+
+            if (!authResponse.Success)
+            {
+                return BadRequest(new AuthFailedResponse
+                {
+                    Errors = authResponse.Errors
+                });
+            }
+            
             return Ok(new AuthSuccessResponse()
             {
                 Token = authResponse.Token
