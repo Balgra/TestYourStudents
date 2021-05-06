@@ -48,18 +48,21 @@ export const RegisterForm = (props: RegisterFormProps) => {
       <TagEditField
         label="Email"
         value={email}
+        dataType="email"
         onValueChange={(e) => setEmail(e.detail.value)}
         className="mt-3"
       />
       <TagEditField
         label="Password"
         value={password}
+        editor="password"
         onValueChange={(e) => setPassword(e.detail.value)}
         className="mt-3"
       />
       <TagEditField
         label="Confirm password"
         value={password}
+        editor="password"
         onValueChange={(e) => setPassword(e.detail.value)}
         className="mt-3"
       />

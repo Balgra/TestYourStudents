@@ -14,8 +14,9 @@ using TestYourStudents.EF.EFRepositories.Abstractions;
 
 namespace TestYourStudents.API.Controllers
 {
-    [Microsoft.AspNetCore.Components.Route("api/Identity")]
     [ApiController]
+    [Route("/api/Identity/")]
+
     public class IdentityController : ControllerBase
     {
         private readonly IIdentityRepository _identityRepository;
@@ -68,8 +69,8 @@ namespace TestYourStudents.API.Controllers
                 Token = authResponse.Token
             });
         }
-        
-        
+
+
         [HttpPost("RegisterAsStudent")]
         [AllowAnonymous]
         public async Task<IActionResult> RegisterAsStudent([FromBody] UserRegistrationRequest request)
@@ -77,14 +78,14 @@ namespace TestYourStudents.API.Controllers
             var studentEmails = await _studentEmailRepo.GetAllAsync();
 
             var student = from studentEmail in studentEmails
-                where request.Email.Equals(studentEmail.Email)
-                select studentEmail;
+                          where request.Email.Equals(studentEmail.Email)
+                          select studentEmail;
 
             if (student.Count() < 0)
             {
                 return BadRequest($"Couldn't find a student enrolled with the email {request.Email}");
             }
-            
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(new AuthFailedResponse
@@ -102,7 +103,7 @@ namespace TestYourStudents.API.Controllers
                     Errors = authResponse.Errors
                 });
             }
-            
+
             return Ok(new AuthSuccessResponse()
             {
                 Token = authResponse.Token
