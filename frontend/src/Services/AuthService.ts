@@ -1,6 +1,7 @@
 import { resolve } from "dns";
 import { LoginModel } from "../Models/LoginModel";
 import { RegisterProfessorModel } from "../Models/RegisterProfessorModel";
+import { RegisterStudentModel } from "../Models/RegisterStudentModel";
 
 const GetAccessToken = () => {
     const storage = localStorage.getItem("session");
@@ -57,7 +58,7 @@ const parseJwt = (token: string) =>  {
          
          SetToken(data.token);
      }
-     else return new Promise<string>((r, reject) => reject(data.errors));
+     else return new Promise<string>((r, reject) => reject(data.errors[0]));
      return "Login successful!";
  
  }
@@ -69,21 +70,20 @@ const parseJwt = (token: string) =>  {
     if(response.ok) {
         SetToken(data.token);
     }
-    else return new Promise<string>((r, reject) => reject(data.errors));
+    else return new Promise<string>((r, reject) => reject(data.errors[0]));
     return "Register successful!";
 
 }
 
-export const RegisterAsStudent = async (request: RegisterProfessorModel): Promise<string> => {
+export const RegisterAsStudent = async (request: RegisterStudentModel): Promise<string> => {
     const response = await fetch(`${baseIdentityUrl}/RegisterAsStudent`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(request)});
     const body = response.json();
     const data = await body;
     if(response.ok) {
         SetToken(data.token);
     }
-    else return new Promise<string>((r, reject) => reject(data.errors));
+    else return new Promise<string>((r, reject) => reject(data.errors[0]));
     return "Register successful!";
-
 }
 
  

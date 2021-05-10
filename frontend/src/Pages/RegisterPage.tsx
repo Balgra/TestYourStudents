@@ -1,14 +1,23 @@
 import { TagTabs } from "@tag/tag-components-react-v2";
 import { TagText } from "@tag/tag-components-react-v3";
 import { RegisterForm } from "../Components/RegisterForm";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { IsAuthenticated } from "../Services/AuthService";
+import { Redirect } from "react-router";
 
 export const RegisterPage = () => {
   const [title, setTitle] = useState("Register as student");
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setLoggedIn(IsAuthenticated());
+  }, []);
+
+  if (loggedIn) return <Redirect to="/" />;
   return (
     <div
       style={{ width: "100%", height: "100%" }}
-      className="d-flex justify-content-center align-items-center"
+      className="d-flex justify-content-center align-items-center mt-5"
     >
       <div
         style={{
@@ -44,3 +53,6 @@ export const RegisterPage = () => {
     </div>
   );
 };
+function setLoggedIn(arg0: any) {
+  throw new Error("Function not implemented.");
+}
