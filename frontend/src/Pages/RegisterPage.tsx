@@ -1,14 +1,23 @@
 import { TagTabs } from "@tag/tag-components-react-v2";
 import { TagText } from "@tag/tag-components-react-v3";
 import { RegisterForm } from "../Components/RegisterForm";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { IsAuthenticated } from "../Services/AuthService";
+import { Redirect } from "react-router";
 
-export const RegisterPage = () => {
+export const RegisterPage = (props: { handleLoginSuccess: () => void }) => {
   const [title, setTitle] = useState("Register as student");
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setLoggedIn(IsAuthenticated());
+  }, []);
+
+  if (loggedIn) return <Redirect to="/" />;
   return (
     <div
       style={{ width: "100%", height: "100%" }}
-      className="d-flex justify-content-center align-items-center"
+      className="d-flex justify-content-center align-items-center mt-5"
     >
       <div
         style={{
@@ -27,13 +36,21 @@ export const RegisterPage = () => {
             {
               caption: "Register as student",
               name: "student",
-              renderContent: () => <RegisterForm type="Student"></RegisterForm>,
+              renderContent: () => (
+                <RegisterForm
+                  handleLoginSuccess={props.handleLoginSuccess}
+                  type="Student"
+                ></RegisterForm>
+              ),
               selected: true,
             },
             {
               caption: "Register as professor",
               renderContent: () => (
-                <RegisterForm type="Professor"></RegisterForm>
+                <RegisterForm
+                  handleLoginSuccess={props.handleLoginSuccess}
+                  type="Professor"
+                ></RegisterForm>
               ),
               name: "professor",
             },

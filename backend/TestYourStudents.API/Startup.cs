@@ -29,7 +29,14 @@ namespace TestYourStudents.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
+                    });
+            });
             services.AddControllers();
             services.AddDbContext<TestYourStudentsDbContext>(
                 options => options.UseMySql(Configuration.GetConnectionString("tys"),x=>x.MigrationsAssembly("TestYourStudents.API"))); 
@@ -127,6 +134,8 @@ namespace TestYourStudents.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
             
             app.UseAuthentication();
 

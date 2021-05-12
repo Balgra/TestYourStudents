@@ -1,26 +1,62 @@
 import React, { useState } from "react";
 import { TagEditField } from "@tag/tag-components-react-v2";
 import { TagButton } from "@tag/tag-components-react-v3";
+import { ToastModel } from "../Models/Utils/ToastModel";
+import {
+  RegisterAsProfessor,
+  RegisterAsStudent,
+} from "../Services/AuthService";
+import { Toast } from "./Toast";
 
 interface RegisterFormProps {
   type: "Student" | "Professor";
+  handleLoginSuccess: () => void;
 }
 
 export const RegisterForm = (props: RegisterFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [courseName, setCourseName] = useState("");
+  const [toast, setToast] = useState<ToastModel>();
 
   const SubmitForm = () => {
     // doamne nu ma lasa ce e aci
-    const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const regex =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const emailValidated = regex.test(email.toLowerCase());
-    const passwordValidated = password.length >= 6;
+    const passwordValidated = password === confirmPassword;
+    const valid = emailValidated && passwordValidated;
+
+    if (!emailValidated)
+      setToast({ text: "The email is invalid!", type: "danger" });
+    else if (!passwordValidated)
+      setToast({ text: "Passwords doesn't match!", type: "danger" });
+
+    if (valid)
+      if (props.type === "Student")
+        RegisterAsStudent({ email, password, firstName, lastName })
+          .then((response) => {
+            setToast({ text: response, type: "information" });
+            props.handleLoginSuccess();
+          })
+          .catch((e) => setToast({ text: e, type: "danger" }));
+      else if (props.type === "Professor")
+        RegisterAsProfessor({
+          email,
+          password,
+          firstName,
+          lastName,
+          courseName,
+        })
+          .then((response) => {
+            setToast({ text: response, type: "information" });
+            props.handleLoginSuccess();
+          })
+          .catch((e) => setToast({ text: e, type: "danger" }));
   };
-  //   if(emailValidated && passwordValidated)
-  //       Login(email, password).then((authorized) => authorized ? props.onSuccessfullLogin() : console.log("invalid credentials")).catch(e => console.log(e));
   return (
     <div className="mt-5 d-flex flex-column">
       <TagEditField
@@ -48,27 +84,31 @@ export const RegisterForm = (props: RegisterFormProps) => {
       <TagEditField
         label="Email"
         value={email}
+        dataType="email"
         onValueChange={(e) => setEmail(e.detail.value)}
         className="mt-3"
       />
       <TagEditField
         label="Password"
         value={password}
+        editor="password"
         onValueChange={(e) => setPassword(e.detail.value)}
         className="mt-3"
       />
       <TagEditField
         label="Confirm password"
-        value={password}
-        onValueChange={(e) => setPassword(e.detail.value)}
+        value={confirmPassword}
+        editor="password"
+        onValueChange={(e) => setConfirmPassword(e.detail.value)}
         className="mt-3"
       />
       <TagButton
         accent="viridiangreen"
-        onClick={() => SubmitForm()}
+        onButtonClick={() => SubmitForm()}
         text="Register"
         className="mt-3"
       ></TagButton>
+      <Toast type={toast?.type} text={toast?.text} />
     </div>
   );
 };
