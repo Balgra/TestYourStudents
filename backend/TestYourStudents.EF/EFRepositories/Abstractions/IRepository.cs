@@ -12,5 +12,6 @@ namespace TestYourStudents.EF.EFRepositories.Abstractions
         Task<T> AddAsync(T obj);
         Task DeleteAsync(int id);
         Task SaveChangesAsync();
+        DbSet<T> AsDbSet();
     }
 }

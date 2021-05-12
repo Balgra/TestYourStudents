@@ -40,5 +40,10 @@ namespace TestYourStudents.EF.EFRepositories.Abstractions
         {
             await _context.SaveChangesAsync();
         }
+
+        public DbSet<T> AsDbSet()
+        {
+            return _context.Set<T>();
+        }
     }
 }
