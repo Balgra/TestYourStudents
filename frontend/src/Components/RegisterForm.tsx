@@ -10,6 +10,7 @@ import { Toast } from "./Toast";
 
 interface RegisterFormProps {
   type: "Student" | "Professor";
+  handleLoginSuccess: () => void;
 }
 
 export const RegisterForm = (props: RegisterFormProps) => {
@@ -39,6 +40,7 @@ export const RegisterForm = (props: RegisterFormProps) => {
         RegisterAsStudent({ email, password, firstName, lastName })
           .then((response) => {
             setToast({ text: response, type: "information" });
+            props.handleLoginSuccess();
           })
           .catch((e) => setToast({ text: e, type: "danger" }));
       else if (props.type === "Professor")
@@ -51,6 +53,7 @@ export const RegisterForm = (props: RegisterFormProps) => {
         })
           .then((response) => {
             setToast({ text: response, type: "information" });
+            props.handleLoginSuccess();
           })
           .catch((e) => setToast({ text: e, type: "danger" }));
   };

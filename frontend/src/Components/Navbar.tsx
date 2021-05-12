@@ -3,12 +3,10 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IsAuthenticated, Logout } from "../Services/AuthService";
 
-export const Navbar = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  useEffect(() => {
-    setLoggedIn(IsAuthenticated());
-  }, []);
+export const Navbar = (props: {
+  isAuthenticated: boolean;
+  handleAuthActions: (s: boolean) => void;
+}) => {
   return (
     <nav className="navbar navbar-expand justify-content-around navbar-light bg-light">
       <a className="navbar-brand ml-3" href="/">
@@ -24,7 +22,7 @@ export const Navbar = () => {
       <div className="navbar navbar-small justify-content-center">
         <div className="navbar-nav">
           <div className="nav-item d-flex align-items-center">
-            {!loggedIn ? (
+            {!props.isAuthenticated ? (
               <>
                 <Link className="nav-link " to="login">
                   <TagText type="p">Login</TagText>
@@ -35,7 +33,14 @@ export const Navbar = () => {
               </>
             ) : (
               <Link className="nav-link " to="/login">
-                <p onClick={() => Logout()}>Logout</p>
+                <p
+                  onClick={() => {
+                    Logout();
+                    props.handleAuthActions(false);
+                  }}
+                >
+                  Logout
+                </p>
               </Link>
             )}
           </div>

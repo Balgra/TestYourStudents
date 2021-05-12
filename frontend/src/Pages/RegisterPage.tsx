@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { IsAuthenticated } from "../Services/AuthService";
 import { Redirect } from "react-router";
 
-export const RegisterPage = () => {
+export const RegisterPage = (props: { handleLoginSuccess: () => void }) => {
   const [title, setTitle] = useState("Register as student");
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -36,13 +36,21 @@ export const RegisterPage = () => {
             {
               caption: "Register as student",
               name: "student",
-              renderContent: () => <RegisterForm type="Student"></RegisterForm>,
+              renderContent: () => (
+                <RegisterForm
+                  handleLoginSuccess={props.handleLoginSuccess}
+                  type="Student"
+                ></RegisterForm>
+              ),
               selected: true,
             },
             {
               caption: "Register as professor",
               renderContent: () => (
-                <RegisterForm type="Professor"></RegisterForm>
+                <RegisterForm
+                  handleLoginSuccess={props.handleLoginSuccess}
+                  type="Professor"
+                ></RegisterForm>
               ),
               name: "professor",
             },
@@ -53,6 +61,3 @@ export const RegisterPage = () => {
     </div>
   );
 };
-function setLoggedIn(arg0: any) {
-  throw new Error("Function not implemented.");
-}

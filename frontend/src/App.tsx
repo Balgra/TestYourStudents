@@ -14,7 +14,7 @@ function App() {
 
   return (
     <Router>
-      <Navbar />
+      <Navbar isAuthenticated={loggedIn} handleAuthActions={setLoggedIn} />
 
       {loggedIn ? (
         <Switch>
@@ -22,9 +22,25 @@ function App() {
         </Switch>
       ) : (
         <Switch>
-          <Route path="/login" exact component={LoginPage} />
-          <Route path="/register" exact component={RegisterPage} />
-          <Route component={LoginPage} />
+          <Route
+            path="/login"
+            exact
+            render={() => (
+              <LoginPage handleLoginSuccess={() => setLoggedIn(true)} />
+            )}
+          />
+          <Route
+            path="/register"
+            exact
+            render={() => (
+              <RegisterPage handleLoginSuccess={() => setLoggedIn(true)} />
+            )}
+          />
+          <Route
+            render={() => (
+              <LoginPage handleLoginSuccess={() => setLoggedIn(true)} />
+            )}
+          />
         </Switch>
       )}
     </Router>

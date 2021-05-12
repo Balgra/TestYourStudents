@@ -6,7 +6,7 @@ import { ToastModel } from "../Models/Utils/ToastModel";
 import { Redirect } from "react-router";
 import { Toast } from "../Components/Toast";
 
-export const LoginPage = () => {
+export const LoginPage = (props: { handleLoginSuccess: () => void }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [toast, setToast] = useState<ToastModel>();
@@ -26,6 +26,7 @@ export const LoginPage = () => {
         .then((response) => {
           setToast({ text: response, type: "information" });
           setLoggedIn(true);
+          props.handleLoginSuccess();
         })
         .catch((error) => setToast({ text: error, type: "danger" }));
     else setToast({ text: "The email is invalid!", type: "danger" });
