@@ -1,7 +1,6 @@
-import { TagButton, TagIcon, TagText } from "@tag/tag-components-react-v3";
-import React, { useEffect, useState } from "react";
+import { TagText } from "@tag/tag-components-react-v3";
 import { Link } from "react-router-dom";
-import { IsAuthenticated, Logout } from "../Services/AuthService";
+import { Logout } from "../Services/AuthService";
 
 export const Navbar = (props: {
   isAuthenticated: boolean;

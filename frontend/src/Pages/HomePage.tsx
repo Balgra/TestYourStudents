@@ -6,8 +6,11 @@ import {
   TagPill,
 } from "@tag/tag-components-react-v3";
 import React, { useEffect, useRef, useState } from "react";
+import { Toast } from "../Components/Toast";
+import { ToastModel } from "../Models/Utils/ToastModel";
 import { GetCurrentUserRole } from "../Services/AuthService";
 import { GetCourses } from "../Services/CourseService";
+import { EnrollStudents } from "../Services/EnrollStudentsService";
 
 export const HomePage = () => {
   const [role, setRole] = useState<"Professor" | "Student">();
@@ -16,6 +19,7 @@ export const HomePage = () => {
     useState(false);
   const [enrollInput, setEnrollInput] = useState("");
   const [possibleStudents, setPossibleStudents] = useState<string[]>([]);
+  const [toast, setToast] = useState<ToastModel>();
   const enrollStudentInput: any = useRef(null);
   useEffect(() => {
     setRole(GetCurrentUserRole());
@@ -25,15 +29,29 @@ export const HomePage = () => {
   }, []);
 
   const handleInputKeyPress = (e: any) => {
-    console.log("key pressed");
-    if (e.key !== "Enter") return;
+    if (e.detail.key !== "Enter") return;
     let enrolled = [...possibleStudents];
     enrolled.push(enrollInput);
-    if (enrollStudentInput && enrollStudentInput.current) {
-      enrollStudentInput.current.tagComponent.current.text = "";
-    }
     setEnrollInput("");
     setPossibleStudents(enrolled);
+  };
+
+  const handleEnrollSubmit = () => {
+    setPossibleStudents([]);
+    setEnrollInput("");
+    EnrollStudents(possibleStudents, course.id)
+      .then(() => {
+        setToast({
+          type: "information",
+          text: "Students enrolled successfully!",
+        });
+      })
+      .catch((e) => setToast({ type: "danger", text: e }));
+  };
+  const handleEnrollModalClose = () => {
+    setEnrollStudentsModalVisible(false);
+    setPossibleStudents([]);
+    setEnrollInput("");
   };
 
   return (
@@ -57,7 +75,7 @@ export const HomePage = () => {
 
           <TagModal
             visible={enrollStudentsModalVisible}
-            onClosed={() => setEnrollStudentsModalVisible(false)}
+            onClosed={() => handleEnrollModalClose()}
             onOpened={() =>
               setTimeout(
                 () =>
@@ -70,7 +88,7 @@ export const HomePage = () => {
             primaryButton="Enroll"
             primaryButtonAccent="keppel"
             borderAccent="dolphinblue"
-            onPrimaryButtonClick={() => setPossibleStudents([])}
+            onPrimaryButtonClick={() => handleEnrollSubmit()}
           >
             <div>
               <TagEditField
@@ -79,15 +97,17 @@ export const HomePage = () => {
                 value={enrollInput}
                 placeholder="Enter a student email"
                 onValueChange={(e) => setEnrollInput(e.detail.value)}
-                onKeyDown={(e) => handleInputKeyPress(e)}
+                onEditorKeypress={(e) => handleInputKeyPress(e)}
+                validation={[{ rule: "email" }]}
                 className="mt-3"
               />
+
               {possibleStudents.length > 0 ? (
                 <div>
                   <TagText text="Emails added" />
 
                   {possibleStudents.map((e) => (
-                    <TagPills>
+                    <TagPills key={e}>
                       <TagPill>{e}</TagPill>
                     </TagPills>
                   ))}
@@ -97,6 +117,7 @@ export const HomePage = () => {
               )}
             </div>
           </TagModal>
+          <Toast type={toast?.type} text={toast?.text} />
         </>
       ) : (
         <></>

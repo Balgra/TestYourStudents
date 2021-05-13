@@ -6,6 +6,7 @@ import {
   applyPolyfills,
   defineCustomElements as defineCustomElements_v3,
 } from "@tag/tag-components-v3/loader";
+import { defineCustomElements } from "@tag/tag-components";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -21,6 +22,7 @@ ReactDOM.render(
 applyPolyfills().then(() => {
   defineCustomElements_v3();
 });
+defineCustomElements(window);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

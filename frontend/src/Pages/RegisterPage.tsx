@@ -1,7 +1,6 @@
 import { TagTabs } from "@tag/tag-components-react-v2";
-import { TagText } from "@tag/tag-components-react-v3";
 import { RegisterForm } from "../Components/RegisterForm";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IsAuthenticated } from "../Services/AuthService";
 import { Redirect } from "react-router";
 
