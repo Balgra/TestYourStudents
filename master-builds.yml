@@ -15,7 +15,7 @@ stages:
   - stage: Backend
     jobs:
       - job: BuildBackend
-        pool: Default
+        pool: Misu
         steps:
           - task: DockerInstaller@0
             inputs:
@@ -28,7 +28,7 @@ stages:
   - stage: Frontend
     jobs:
       - job: BuildFrontend
-        pool: Default
+        pool: Misu
         steps:
           - task: DockerInstaller@0
             inputs:
