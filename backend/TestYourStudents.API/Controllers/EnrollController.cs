@@ -13,7 +13,7 @@ namespace TestYourStudents.API.Controllers
     [ApiController]
     [Authorize(Roles = "Professor")]
     [Route("/api/{courseId}/enroll")]
-    public class EnrollController: ControllerBase
+    public class EnrollController : ControllerBase
     {
         private readonly IRepository<StudentEmail> _repo;
         private readonly IRepository<Course> _courseRepo;
@@ -38,16 +38,16 @@ namespace TestYourStudents.API.Controllers
 
             if (!course.ProfessorId.Equals(userId))
                 return BadRequest("You are not allowed to add students to that course!");
-            
-            
+
+
             // get the students
             var students = await _repo.GetAllAsync();
-            
+
             // filter already added students for a specific course
             var studentsEmailsAlreadyAdded = from student in students
-                where request.StudentEmails.Contains(student.Email) && student.CourseId.Equals(courseId)
-                select student.Email;
-            
+                                             where request.StudentEmails.Contains(student.Email) && student.CourseId.Equals(courseId)
+                                             select student.Email;
+
             // add the students and skip students that already exist
             foreach (var studentEmail in request.StudentEmails)
             {
@@ -62,12 +62,12 @@ namespace TestYourStudents.API.Controllers
                     };
                     await _repo.AddAsync(studentEmailEntity);
                 }
-            
+
             }
 
             await _repo.SaveChangesAsync();
 
-            return Ok();
+            return Ok("Students enrolled successfully!");
         }
     }
 }

@@ -37,7 +37,8 @@ namespace TestYourStudents.API
                         builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
                     });
             });
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddDbContext<TestYourStudentsDbContext>(
                 options => options.UseMySql(Configuration.GetConnectionString("tys"),x=>x.MigrationsAssembly("TestYourStudents.API"))); 
             services.AddScoped<IIdentityRepository, IdentityRepository>();
