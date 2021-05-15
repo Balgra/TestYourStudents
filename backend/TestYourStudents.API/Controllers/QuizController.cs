@@ -37,11 +37,15 @@ namespace TestYourStudents.API.Controllers
             if (userRole == "Professor")
             {
                 quizes = await _quizRepo.AsDbSet().Include(q => q.Questions)
+                    .Include(q => q.Course)
                     .Where(q => q.CourseId == courseId).ToListAsync();
             }
             else
             {
-                quizes = await _quizRepo.AsDbSet().Where(q => q.VisibleForStudents && q.CourseId == courseId).ToListAsync();
+                quizes = await _quizRepo.AsDbSet()
+                    .Include(q => q.Course)
+                    .Where(q => q.VisibleForStudents && q.CourseId == courseId)
+                    .ToListAsync();
             }
 
             return Ok(quizes);

@@ -24,6 +24,7 @@ export const HomePage = () => {
   const [enrollInput, setEnrollInput] = useState("");
   const [possibleStudents, setPossibleStudents] = useState<string[]>([]);
   const [toast, setToast] = useState<ToastModel>();
+  const [refresh, setRefresh] = useState(0);
   const enrollStudentInput: any = useRef(null);
   useEffect(() => {
     setRole(GetCurrentUserRole());
@@ -33,7 +34,7 @@ export const HomePage = () => {
         setQuizzes(res);
       });
     });
-  }, []);
+  }, [refresh]);
 
   const handleInputKeyPress = (e: any) => {
     if (e.detail.key !== "Enter") return;
@@ -133,7 +134,11 @@ export const HomePage = () => {
         <></>
       )}
       {role && quizzes.length > 0 ? (
-        <QuizList role={role} quizzes={quizzes} />
+        <QuizList
+          role={role}
+          quizzes={quizzes}
+          onForceRefresh={() => setRefresh(refresh + 1)}
+        />
       ) : (
         <></>
       )}
