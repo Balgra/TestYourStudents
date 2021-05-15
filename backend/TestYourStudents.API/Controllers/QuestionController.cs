@@ -63,5 +63,37 @@ namespace TestYourStudents.API.Controllers
             
             return Ok(question);
         }
+
+        [HttpDelete]
+        [Authorize(Roles = "Professor")]
+        public async Task<IActionResult> DeleteQuestion([FromBody] DeleteQuestionRequest request, [FromRoute] int courseId)
+        {
+            
+            var course = await _courseRepo.GetByIdAsync(courseId);
+
+            if (course == null)
+            {
+                return BadRequest("The course is not in this scope");
+            }
+            
+            var userId = User.Claims.Where(c => c.Type.Equals("userId"))?.FirstOrDefault()?.Value;
+                
+            if (course.ProfessorId != userId)
+            {
+                return BadRequest("The User ID does not match the Professor's ID");
+            }
+
+            var question = await _questionRepo.GetByIdAsync(request.QuestionId);
+
+            if (question == null)
+            {
+                return BadRequest("The question does not exist at this course");
+            }
+
+            await _questionRepo.DeleteAsync(request.QuestionId);
+            await _questionRepo.SaveChangesAsync();
+            
+            return Ok();
+        }
     }
 }
