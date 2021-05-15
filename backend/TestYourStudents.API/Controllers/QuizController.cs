@@ -14,7 +14,7 @@ using TestYourStudents.EF.EFRepositories.Abstractions;
 namespace TestYourStudents.API.Controllers
 {
     [ApiController]
-    [Authorize(Roles="Professor")]
+    [Authorize]
     [Route("/api/{courseId}/quiz")]
     public class QuizController : ControllerBase
     {

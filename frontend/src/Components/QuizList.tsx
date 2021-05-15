@@ -39,8 +39,8 @@ export const QuizList = (props: QuizListProps) => {
       leftField1="leftField"
       leftField1Icon="CalendarTick"
       leftField1IconAccent="access"
-      leftField2="visible"
-      leftField2Icon="Users"
+      leftField2={props.role === "Professor" ? "visible" : ""}
+      leftField2Icon={props.role === "Professor" ? "Users" : ""}
       leftField2IconAccent="viridiangreen"
       button1DisabledField="disabled"
       button2DisabledField="disabled"

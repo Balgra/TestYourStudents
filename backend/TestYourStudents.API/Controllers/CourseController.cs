@@ -46,14 +46,14 @@ namespace TestYourStudents.API.Controllers
 
                 var userEmail = User.Claims.Where(x => x.Type == ClaimTypes.Email).FirstOrDefault()?.Value;
 
-                var courses = await _studentEmailRepo.AsDbSet()
+                var course = await _studentEmailRepo.AsDbSet()
                     .Include(c => c.Course)
                     .Where(s => s.Email == userEmail).Select(s =>
                         new CourseResponseModel()
                             {Id = s.Course.Id, Name = s.Course.Name, ProfessorName = s.Course.User.ToString()})
-                    .ToListAsync();
+                    .FirstOrDefaultAsync();
 
-                return Ok(courses);
+                return Ok(course);
             }
 
             return BadRequest();

@@ -63,21 +63,25 @@ export const HomePage = () => {
 
   return (
     <div className="container">
-      {role === "Professor" && course ? (
+      {course ? (
         <>
           <div
             style={{ width: "100%" }}
             className="d-flex justify-content-between my-5"
           >
             <TagText type="h2" text={course.name} />
-            <TagButton
-              accent="white"
-              icon="Plus"
-              iconAccent="keppel"
-              text="Enroll students"
-              size="large"
-              onButtonClick={() => setEnrollStudentsModalVisible(true)}
-            />
+            {role === "Professor" ? (
+              <TagButton
+                accent="white"
+                icon="Plus"
+                iconAccent="keppel"
+                text="Enroll students"
+                size="large"
+                onButtonClick={() => setEnrollStudentsModalVisible(true)}
+              />
+            ) : (
+              <></>
+            )}
           </div>
 
           <TagModal
