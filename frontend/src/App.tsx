@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Navbar } from "./Components/Navbar";
 import { LoginPage } from "./Pages/LoginPage";
+import { HomePage } from "./Pages/HomePage";
 import { RegisterPage } from "./Pages/RegisterPage";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { IsAuthenticated, Login } from "./Services/AuthService";
+import { IsAuthenticated } from "./Services/AuthService";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -18,7 +19,8 @@ function App() {
 
       {loggedIn ? (
         <Switch>
-          <Route path="/" />
+          <Route path="/" render={() => <HomePage />} />
+          <Route render={() => <HomePage />} />
         </Switch>
       ) : (
         <Switch>

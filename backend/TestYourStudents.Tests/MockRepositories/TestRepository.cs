@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TestYourStudents.Core.Entities;
 using TestYourStudents.EF.EFRepositories.Abstractions;
 
@@ -41,6 +42,11 @@ namespace TestYourStudents.Tests.MockRepositories
         public async Task SaveChangesAsync()
         {
             await Task.Run(() => { });
+        }
+
+        public DbSet<T> AsDbSet()
+        {
+            return null;
         }
     }
 }

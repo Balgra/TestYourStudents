@@ -12,5 +12,10 @@ namespace TestYourStudents.Core.Entities
         [Required]
         [MaxLength(100)]
         public string LastName { get; set; }
+        
+        public override string ToString()
+        {
+            return this.FirstName + " " + this.LastName;
+        }
     }
 }

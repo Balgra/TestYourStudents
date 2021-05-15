@@ -35,7 +35,6 @@ const parseJwt = (token: string) =>  {
  
  export const IsAuthenticated = () => {
     const storage = localStorage.getItem("session");
-    debugger;
     if(storage) {
         const session = JSON.parse(storage);
         if(!(session && session.accessToken))
@@ -46,6 +45,24 @@ const parseJwt = (token: string) =>  {
         return true;
     }
     return false;
+ }
+
+ export const HasRole = (role: "Professor" | "Student"): boolean => {
+    const claims: any = localStorage.getItem("session");
+    if (!claims)
+        return false;
+    if(claims.role === role)
+        return true;
+    return false;
+ }
+
+ export const GetCurrentUserRole = (): "Professor" | "Student" => {
+    const session: any = localStorage.getItem("session");
+    if(session){
+        const claims = JSON.parse(session);
+    return claims.role;
+    }
+    return session.role;
  }
  
  const baseIdentityUrl = "https://localhost:5001" + '/api/Identity';
