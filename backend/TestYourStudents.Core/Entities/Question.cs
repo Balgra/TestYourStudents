@@ -6,8 +6,8 @@ namespace TestYourStudents.Core.Entities
     {
         public string QuestionName { get; set; }
         
-        [ForeignKey("Course")]
-        public int CourseId { get; set; }
-        public Course Course { get; set; }
+        [ForeignKey("Quiz")]
+        public int QuizId { get; set; }
+        public Quiz Quiz { get; set; }
     }
 }
