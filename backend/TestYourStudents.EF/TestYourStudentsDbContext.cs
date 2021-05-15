@@ -17,7 +17,6 @@ namespace TestYourStudents.EF
         public DbSet<Question> Question { get; set; }
         public DbSet<QuestionResponse> QuestionResponse { get; set; }
         public DbSet<QuizGrade> QuizGrade { get; set; }
-        public DbSet<QuizQuestion> QuizQuestion { get; set; }
         public DbSet<QuizSession> QuizSession { get; set; }
         public DbSet<QuizSubmission> QuizSubmission { get; set; }
     }
