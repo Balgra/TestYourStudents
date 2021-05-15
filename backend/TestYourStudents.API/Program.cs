@@ -12,9 +12,10 @@ namespace TestYourStudents.API
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args).ConfigureHostConfiguration(ctx =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                    ctx.AddEnvironmentVariables(prefix: "TYS_");
+                    config.AddEnvironmentVariables(prefix: "TYS_");
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

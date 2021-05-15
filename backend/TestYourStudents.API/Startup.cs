@@ -127,9 +127,9 @@ namespace TestYourStudents.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TestYourStudents.API v1"));
             }
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TestYourStudents.API v1"));
 
             app.UseHttpsRedirection();
 
