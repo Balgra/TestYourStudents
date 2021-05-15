@@ -1,4 +1,3 @@
-import { resolve } from "dns";
 import { LoginModel } from "../Models/LoginModel";
 import { RegisterProfessorModel } from "../Models/RegisterProfessorModel";
 import { RegisterStudentModel } from "../Models/RegisterStudentModel";
@@ -65,7 +64,7 @@ const parseJwt = (token: string) =>  {
     return session.role;
  }
  
- const baseIdentityUrl = "https://localhost:5001" + '/api/Identity';
+ const baseIdentityUrl = (process.env.NODE_ENV === "production" ? "https://api.testyourstudents.adelinchis.ro" : "https://localhost:5001") + '/api/Identity';
  
  export const Login = async (request: LoginModel): Promise<string> => {
      const response = await fetch(`${baseIdentityUrl}/login`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(request)});

@@ -1,0 +1,39 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+trigger:
+  - master
+
+variables:
+  solution: "**/*.sln"
+  buildPlatform: "Any CPU"
+  buildConfiguration: "Release"
+
+stages:
+  - stage: Backend
+    jobs:
+      - job: BuildBackend
+        pool: Misu
+        steps:
+          - task: DockerInstaller@0
+            inputs:
+              dockerVersion: "17.09.0-ce"
+          - script: |
+              docker login -u $(Registry.User) -p $(Registry.Pass) $(Registry.Url)
+              docker build -t $(Registry.Url)/tys-api:$(Build.BuildId) backend/
+              docker push $(Registry.Url)/tys-api:$(Build.BuildId)
+
+  - stage: Frontend
+    jobs:
+      - job: BuildFrontend
+        pool: Misu
+        steps:
+          - task: DockerInstaller@0
+            inputs:
+              dockerVersion: "17.09.0-ce"
+          - script: |
+              docker login -u $(Registry.User) -p $(Registry.Pass) $(Registry.Url)
+              docker build -t $(Registry.Url)/tys-frontend:$(Build.BuildId) frontend/
+              docker push $(Registry.Url)/tys-frontend:$(Build.BuildId)

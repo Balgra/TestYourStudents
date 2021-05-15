@@ -1,6 +1,6 @@
 import { GetAuthHeader } from "./AuthService";
 
-const baseCourseApiUrl = "https://localhost:5001" + '/api/';
+const baseCourseApiUrl = (process.env.NODE_ENV === "production" ? "https://api.testyourstudents.adelinchis.ro" : "https://localhost:5001") + '/api/';
 
 export const CreateQuestion = async (questionName: string, courseId: number, quizId: number): Promise<any> => {
     const response = await fetch(`${baseCourseApiUrl}${courseId}/question`, {method: 'POST', headers: {'Content-Type': 'application/json', ...GetAuthHeader()}, body: JSON.stringify({name: questionName, quizId: quizId})});
