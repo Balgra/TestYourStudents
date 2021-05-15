@@ -11,10 +11,14 @@ import { ToastModel } from "../Models/Utils/ToastModel";
 import { GetCurrentUserRole } from "../Services/AuthService";
 import { GetCourses } from "../Services/CourseService";
 import { EnrollStudents } from "../Services/EnrollStudentsService";
+import { GetQuizzes } from "../Services/QuizService";
+import { QuizModel } from "../Models/QuizModel";
+import { QuizList } from "../Components/QuizList";
 
 export const HomePage = () => {
   const [role, setRole] = useState<"Professor" | "Student">();
   const [course, setCourse] = useState<any>();
+  const [quizzes, setQuizzes] = useState<QuizModel[]>([]);
   const [enrollStudentsModalVisible, setEnrollStudentsModalVisible] =
     useState(false);
   const [enrollInput, setEnrollInput] = useState("");
@@ -25,6 +29,9 @@ export const HomePage = () => {
     setRole(GetCurrentUserRole());
     GetCourses().then((response) => {
       setCourse(response);
+      GetQuizzes(response.id).then((res) => {
+        setQuizzes(res);
+      });
     });
   }, []);
 
@@ -56,21 +63,25 @@ export const HomePage = () => {
 
   return (
     <div className="container">
-      {role === "Professor" && course ? (
+      {course ? (
         <>
           <div
             style={{ width: "100%" }}
             className="d-flex justify-content-between my-5"
           >
             <TagText type="h2" text={course.name} />
-            <TagButton
-              accent="white"
-              icon="Plus"
-              iconAccent="keppel"
-              text="Enroll students"
-              size="large"
-              onButtonClick={() => setEnrollStudentsModalVisible(true)}
-            />
+            {role === "Professor" ? (
+              <TagButton
+                accent="white"
+                icon="Plus"
+                iconAccent="keppel"
+                text="Enroll students"
+                size="large"
+                onButtonClick={() => setEnrollStudentsModalVisible(true)}
+              />
+            ) : (
+              <></>
+            )}
           </div>
 
           <TagModal
@@ -117,11 +128,16 @@ export const HomePage = () => {
               )}
             </div>
           </TagModal>
-          <Toast type={toast?.type} text={toast?.text} />
         </>
       ) : (
         <></>
       )}
+      {role && quizzes.length > 0 ? (
+        <QuizList role={role} quizzes={quizzes} />
+      ) : (
+        <></>
+      )}
+      <Toast type={toast?.type} text={toast?.text} />
     </div>
   );
 };

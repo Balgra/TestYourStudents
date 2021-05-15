@@ -1,9 +1,12 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TestYourStudents.API.Requests;
 using TestYourStudents.Core.Entities;
 using TestYourStudents.EF.EFRepositories.Abstractions;
@@ -11,7 +14,7 @@ using TestYourStudents.EF.EFRepositories.Abstractions;
 namespace TestYourStudents.API.Controllers
 {
     [ApiController]
-    [Authorize(Roles="Professor")]
+    [Authorize]
     [Route("/api/{courseId}/quiz")]
     public class QuizController : ControllerBase
     {
@@ -22,6 +25,26 @@ namespace TestYourStudents.API.Controllers
         {
             _courseRepo = courseRepo;
             _quizRepo = quizRepo;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetQuizzes([FromRoute] int courseId)
+        {
+            var userRole = User.Claims.Where(x => x.Type == ClaimTypes.Role).FirstOrDefault()?.Value;
+
+            List<Quiz> quizes;
+            
+            if (userRole == "Professor")
+            {
+                quizes = await _quizRepo.AsDbSet().Include(q => q.Questions)
+                    .Where(q => q.CourseId == courseId).ToListAsync();
+            }
+            else
+            {
+                quizes = await _quizRepo.AsDbSet().Where(q => q.VisibleForStudents && q.CourseId == courseId).ToListAsync();
+            }
+
+            return Ok(quizes);
         }
 
         [HttpPost]
