@@ -6,7 +6,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.X509;
 using TestYourStudents.API.Requests;
 using TestYourStudents.Core.Entities;
 using TestYourStudents.EF.EFRepositories.Abstractions;
@@ -20,11 +22,15 @@ namespace TestYourStudents.API.Controllers
     {
         private readonly IRepository<Course> _courseRepo;
         private readonly IRepository<Quiz> _quizRepo;
+        private readonly IRepository<Question> _questionRepo;
+        private readonly IRepository<QuizSubmission> _submissionRepo;
 
-        public QuizController(IRepository<Course> courseRepo, IRepository<Quiz> quizRepo)
+        public QuizController(IRepository<Course> courseRepo, IRepository<Quiz> quizRepo, IRepository<Question> questionRepo, IRepository<QuizSubmission> submissionRepo)
         {
             _courseRepo = courseRepo;
             _quizRepo = quizRepo;
+            _questionRepo = questionRepo;
+            _submissionRepo = submissionRepo;
         }
 
         [HttpGet]
@@ -98,9 +104,8 @@ namespace TestYourStudents.API.Controllers
 
         }
 
-       /* [HttpPost]
+        [HttpPost("submit")]
         [Authorize(Roles = "Student")]
-        //primesc courseID quiz ID, list de idintrebare->raspuns, questions reponse trebe populat
         public async Task<IActionResult> SubmitQuiz([FromBody] SubmitQuizRequest request, [FromRoute] int courseId)
         {
             var course = await _courseRepo.GetByIdAsync(courseId);
@@ -109,28 +114,50 @@ namespace TestYourStudents.API.Controllers
             {
                 return BadRequest("The course does not exist");
             }
-            
+
+            var quiz = await _quizRepo.GetByIdAsync(request.QuizId);
+
+            if (quiz == null)
+            {
+                return BadRequest("The quiz is not used in this scope");
+            }
+
             var userId = User.Claims.Where(c => c.Type.Equals("userId"))?.FirstOrDefault()?.Value;
 
-            List<QuestionResponse> responses=new List<QuestionResponse>();//de verificat intrebare cu intrebare.
-            // for each element cu elem din lista de response din request. 
-            // De populat question id si response, 
-            // Faci query in repo si verifici daca exista.
-            // skip if daca nu exista.
-            //Responses.add(QuestionsResponse)
-            foreach (QuestionResponse questionResponse in responses)
+            List<QuestionResponse> responses=new List<QuestionResponse>();
+            
+            foreach (var response in request.Responses)
             {
-                
+                var question = await _questionRepo.GetByIdAsync(response.QuestionId);
+
+                if (question != null)
+                {
+                    var questionResponse = new QuestionResponse()
+                    {
+                        QuestionId = response.QuestionId,
+                        Response = response.QuestionResponse,
+                        CreatedByUserId = userId,
+                        Created = DateTime.Now,
+                        
+                    };
+                    
+                    responses.Add(questionResponse);
+                }
             }
-            var submit = new QuizSubmission()
+            
+            var submission = new QuizSubmission()
             {
                 StudentId= userId,
                 Responses = responses,
+                CreatedByUserId = userId,
+                Created = DateTime.Now
             };  
             
+            await _submissionRepo.AddAsync(submission);
+            await _submissionRepo.SaveChangesAsync();
             
-            return Ok();
-        }*/
+            return Ok(submission);
+        }
 
     }
 

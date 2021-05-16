@@ -17,7 +17,7 @@ namespace TestYourStudents.Tests.Quiz
 {
     public class CrateDeleteQuizAndQuestionTests
     {
-        private IRepository<Core.Entities.Quiz> _quizRepo;
+            private IRepository<Core.Entities.Quiz> _quizRepo;
             private IRepository<Course> _courseRepo;
             private QuizController _controller;
 
@@ -63,12 +63,9 @@ namespace TestYourStudents.Tests.Quiz
                             CourseId=2},
                 });
                 
-                
+               _controller = new QuizController(_courseRepo, _quizRepo,null,null);
 
-                
-                _controller = new QuizController(_courseRepo, _quizRepo);
-
-                var mock = new Mock<HttpContext>();
+               var mock = new Mock<HttpContext>();
                 mock.Setup(x => x.User.Identity.IsAuthenticated).Returns(true);
                 mock.Setup(x => x.User.IsInRole(It.IsAny<string>())).Returns(true);
                 mock.Setup(x => x.User.Claims).Returns(new List<Claim>()
