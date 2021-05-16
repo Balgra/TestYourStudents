@@ -94,13 +94,44 @@ namespace TestYourStudents.API.Controllers
 
             await _quizRepo.AddAsync(quiz);
             await _quizRepo.SaveChangesAsync();
-            
-            
-
             return Ok(quiz);
 
         }
-        
+
+       /* [HttpPost]
+        [Authorize(Roles = "Student")]
+        //primesc courseID quiz ID, list de idintrebare->raspuns, questions reponse trebe populat
+        public async Task<IActionResult> SubmitQuiz([FromBody] SubmitQuizRequest request, [FromRoute] int courseId)
+        {
+            var course = await _courseRepo.GetByIdAsync(courseId);
+
+            if (course is null)
+            {
+                return BadRequest("The course does not exist");
+            }
+            
+            var userId = User.Claims.Where(c => c.Type.Equals("userId"))?.FirstOrDefault()?.Value;
+
+            List<QuestionResponse> responses=new List<QuestionResponse>();//de verificat intrebare cu intrebare.
+            // for each element cu elem din lista de response din request. 
+            // De populat question id si response, 
+            // Faci query in repo si verifici daca exista.
+            // skip if daca nu exista.
+            //Responses.add(QuestionsResponse)
+            foreach (QuestionResponse questionResponse in responses)
+            {
+                
+            }
+            var submit = new QuizSubmission()
+            {
+                StudentId= userId,
+                Responses = responses,
+            };  
+            
+            
+            return Ok();
+        }*/
+
     }
 
 }
