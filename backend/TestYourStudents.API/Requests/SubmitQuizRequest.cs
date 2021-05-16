@@ -7,7 +7,7 @@ namespace TestYourStudents.API.Requests
     {
         public int QuizId { get; set; }
 
-        public List<QuestionResponseRequest> Responses;
+        public List<QuestionResponseRequest> Responses { get; set; }
     }
 
     public class QuestionResponseRequest
