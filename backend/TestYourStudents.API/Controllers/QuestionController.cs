@@ -62,7 +62,7 @@ namespace TestYourStudents.API.Controllers
                 CreatedByUserId = userId
             };
             await _quizSessionRepo.AddAsync(session);
-            await _quizSessionRepo.SaveChangesAsync();
+            // await _quizSessionRepo.SaveChangesAsync();
 
             return Ok(questions);
 
