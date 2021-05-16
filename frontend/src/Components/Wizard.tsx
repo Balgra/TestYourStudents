@@ -22,24 +22,29 @@ export const Wizard = (props: WizardProps) => {
       .then((r) => setQuestions(r))
       .catch((e) => console.log(e));
   }, []);
+  const Submit = (arr: any) => {
+    SubmitQuiz(props.quiz.course.id, props.quiz.id, arr)
+      .then((r) => console.log("submitted"))
+      .catch((e) => console.log(e));
+  };
 
-  const handleButtonsClick = (answer: QuestionResponseModel) => {
+  const handleButtonsClick = (
+    answer: QuestionResponseModel,
+    submit: boolean = false
+  ) => {
     let currentAnswer = answers.find((a) => a.questionId === answer.questionId);
     if (currentAnswer) {
       const arr = answers.filter((a) => a.questionId !== answer.questionId);
       arr.push(answer);
-      setAnswers(arr);
+      submit ? Submit(arr) : setAnswers(arr);
     } else {
       const arr = [...answers];
       arr.push(answer);
-      setAnswers(arr);
+      submit ? Submit(arr) : setAnswers(arr);
     }
   };
   const handleFinish = (answer: QuestionResponseModel) => {
-    handleButtonsClick(answer);
-    SubmitQuiz(props.quiz.course.id, props.quiz.id, answers)
-      .then((r) => console.log("submitted"))
-      .catch((e) => console.log(e));
+    handleButtonsClick(answer, true);
   };
   return questions.length > 0 ? (
     <TagWizard heading={props.quiz.name}>
