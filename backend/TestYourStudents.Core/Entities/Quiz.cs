@@ -20,5 +20,7 @@ namespace TestYourStudents.Core.Entities
         [ForeignKey("Course")]
         public int CourseId { get; set; }
         public Course Course { get; set; }
+        
+        public virtual List<QuizSubmission> Submissions { get; set; }
     }
 }

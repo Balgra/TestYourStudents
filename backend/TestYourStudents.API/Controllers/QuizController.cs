@@ -44,12 +44,16 @@ namespace TestYourStudents.API.Controllers
             {
                 quizes = await _quizRepo.AsDbSet().Include(q => q.Questions)
                     .Include(q => q.Course)
+                    .Include(q => q.Submissions)
+                    .ThenInclude(s => s.Responses)
                     .Where(q => q.CourseId == courseId).ToListAsync();
             }
             else
             {
                 quizes = await _quizRepo.AsDbSet()
                     .Include(q => q.Course)
+                    .Include(q => q.Submissions)
+                    .ThenInclude(s => s.Responses)
                     .Where(q => q.VisibleForStudents && q.CourseId == courseId)
                     .ToListAsync();
             }
@@ -150,7 +154,8 @@ namespace TestYourStudents.API.Controllers
                 StudentId= userId,
                 Responses = responses,
                 CreatedByUserId = userId,
-                Created = DateTime.Now
+                Created = DateTime.Now,
+                QuizId = request.QuizId
             };  
             
             await _submissionRepo.AddAsync(submission);

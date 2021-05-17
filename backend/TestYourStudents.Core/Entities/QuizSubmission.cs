@@ -11,5 +11,10 @@ namespace TestYourStudents.Core.Entities
        public string StudentId { get; set; }
        
        public User User { get; set; }
+       
+       public Quiz Quiz { get; set; }
+       
+       [ForeignKey("Quiz")]
+       public int QuizId { get; set; }
     }
 }
