@@ -9,18 +9,20 @@ The backend swagger can be accessed via: https://api.testyourstudents.adelinchis
 
 #How to build the application
 
-Requirements:
+#Requirements:
  .net 5.0 sdk: https://dotnet.microsoft.com/download
  node js 14.x LTS: https://nodejs.org/en/
  The database is shared on a virtual machine. 
 
 
- How to run the backend:
+ #How to run the backend:
  cd backend/TestYourStudents.API
+ 
  dotnet watch run
 
 
- How to run the frontend:
+ #How to run the frontend:
  cd frontend
+
  npm start
 
