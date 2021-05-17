@@ -32,6 +32,11 @@ export const QuizList = (props: QuizListProps) => {
     }
   };
 
+  const WizardForceRefresh = () => {
+    props.onForceRefresh();
+    setAttendQuiz(false);
+  };
+
   const friendlyDate = (date: Date) => {
     return new Intl.DateTimeFormat("en-GB", {
       dateStyle: "full",
@@ -39,7 +44,7 @@ export const QuizList = (props: QuizListProps) => {
     }).format(new Date(date));
   };
 
-  const listData = props.quizzes.map((q) => {
+  const listData = props.quizzes.map((q: QuizModel) => {
     var time = new Date();
     return {
       ...q,
@@ -50,11 +55,12 @@ export const QuizList = (props: QuizListProps) => {
         ? "Visible for students"
         : "Not visible for students",
       time: q.numberOfMinutes + " minutes",
-      enterQuizDisabled: time < q.startTime || time > q.endTime,
+      enterQuizDisabled:
+        time < q.startTime || time > q.endTime || q.submissions.length > 0,
     };
   });
   return attendQuiz && selectedQuiz ? (
-    <Wizard quiz={selectedQuiz} />
+    <Wizard quiz={selectedQuiz} onForceRefresh={WizardForceRefresh} />
   ) : (
     <>
       <TagList

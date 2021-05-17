@@ -1,5 +1,6 @@
 import { CourseModel } from "./CourseModel";
 import { QuestionModel } from "./QuestionModel";
+import { QuestionResponseModel } from "./QuestionResponseModel";
 
 export interface QuizModel{
     id: number;
@@ -10,4 +11,5 @@ export interface QuizModel{
     endTime: Date;
     numberOfMinutes: number;
     visibleForStudents: boolean;
+    submissions: QuestionResponseModel[];
 }

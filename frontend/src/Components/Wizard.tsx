@@ -11,6 +11,7 @@ import { SubmitQuiz } from "../Services/QuizService";
 
 interface WizardProps {
   quiz: QuizModel;
+  onForceRefresh: () => void;
 }
 
 export const Wizard = (props: WizardProps) => {
@@ -24,7 +25,7 @@ export const Wizard = (props: WizardProps) => {
   }, []);
   const Submit = (arr: any) => {
     SubmitQuiz(props.quiz.course.id, props.quiz.id, arr)
-      .then((r) => console.log("submitted"))
+      .then((r) => props.onForceRefresh())
       .catch((e) => console.log(e));
   };
 
