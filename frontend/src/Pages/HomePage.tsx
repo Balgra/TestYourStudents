@@ -14,6 +14,7 @@ import { EnrollStudents } from "../Services/EnrollStudentsService";
 import { GetQuizzes } from "../Services/QuizService";
 import { QuizModel } from "../Models/QuizModel";
 import { QuizList } from "../Components/QuizList";
+import { CreateQuizModal } from "../Components/CreateQuizModal";
 
 export const HomePage = () => {
   const [role, setRole] = useState<"Professor" | "Student">();
@@ -24,6 +25,7 @@ export const HomePage = () => {
   const [enrollInput, setEnrollInput] = useState("");
   const [possibleStudents, setPossibleStudents] = useState<string[]>([]);
   const [toast, setToast] = useState<ToastModel>();
+  const [createQuizModalVisible, setCreateQuizModalVisible] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const enrollStudentInput: any = useRef(null);
   useEffect(() => {
@@ -72,14 +74,24 @@ export const HomePage = () => {
           >
             <TagText type="h2" text={course.name} />
             {role === "Professor" ? (
-              <TagButton
-                accent="white"
-                icon="Plus"
-                iconAccent="keppel"
-                text="Enroll students"
-                size="large"
-                onButtonClick={() => setEnrollStudentsModalVisible(true)}
-              />
+              <div>
+                <TagButton
+                  accent="white"
+                  icon="Plus"
+                  iconAccent="keppel"
+                  text="Create quiz"
+                  size="large"
+                  onButtonClick={() => setCreateQuizModalVisible(true)}
+                />
+                <TagButton
+                  accent="white"
+                  icon="Plus"
+                  iconAccent="keppel"
+                  text="Enroll students"
+                  size="large"
+                  onButtonClick={() => setEnrollStudentsModalVisible(true)}
+                />
+              </div>
             ) : (
               <></>
             )}
@@ -129,6 +141,12 @@ export const HomePage = () => {
               )}
             </div>
           </TagModal>
+          <CreateQuizModal
+            visible={createQuizModalVisible}
+            courseId={course.id}
+            onForceRefresh={() => setRefresh(refresh + 1)}
+            setVisible={() => setCreateQuizModalVisible(false)}
+          />
         </>
       ) : (
         <></>

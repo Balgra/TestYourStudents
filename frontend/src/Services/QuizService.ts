@@ -16,3 +16,10 @@ export const SubmitQuiz = async (courseId: number, quizId: number, responses: Qu
         return;
     return new Promise((res, rej) => rej("Something went wrong!"));
 }
+
+export const CreateQuiz = async (courseId: number, quiz: any) : Promise<any> => {
+    const response = await fetch(`${baseCourseApiUrl}${courseId}/quiz`, {method: 'POST', headers: {'Content-Type': 'application/json', ...GetAuthHeader()}, body: JSON.stringify(quiz)});
+    if(response.ok)
+        return;
+    return new Promise((res, rej) => rej("Something went wrong!"));
+}
